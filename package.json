@@ -12,7 +12,7 @@
   "exports": {
     ".": "./dist/instant.js",
     "./dom": "./dist/dom.js"
-  }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
