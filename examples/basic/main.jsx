@@ -1,6 +1,6 @@
-import * as Framework from "../../src/framework.ts";
-import { state, effect, ref } from "../../src/framework.ts";
-import * as FrameworkDOM from "../../src/dom.ts";
+import * as Instant from "../../src/instant.ts";
+import { state, effect, ref } from "../../src/instant.ts";
+import * as InstantDOM from "../../src/dom.ts";
 
 function Counter({ initial }) {
   const count = state(initial);

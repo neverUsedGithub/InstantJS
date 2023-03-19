@@ -1,5 +1,5 @@
-import Element from "./element.js";
-import { Fragment } from "./framework.js";
+import Element from "./element";
+import { Fragment } from "./instant";
 interface fn {
   (...arg: any): any;
 }

@@ -25,16 +25,16 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var framework_exports = {};
-__export(framework_exports, {
+var instant_exports = {};
+__export(instant_exports, {
   Fragment: () => Fragment,
   createElement: () => createElement,
   effect: () => effect,
   ref: () => ref,
   state: () => state
 });
-module.exports = __toCommonJS(framework_exports);
-var import_element = __toESM(require("./element.js"));
+module.exports = __toCommonJS(instant_exports);
+var import_element = __toESM(require("./element"));
 const Fragment = Symbol();
 let __FRAMEWORK_CURRENT = null;
 function createElement(name, properties, ...children) {

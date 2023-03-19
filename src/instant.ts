@@ -1,4 +1,4 @@
-import Element from "./element.js";
+import Element from "./element";
 export const Fragment = Symbol();
 interface fn { (...arg: any): any }
 

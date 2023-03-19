@@ -30,8 +30,8 @@ __export(dom_exports, {
   render: () => render
 });
 module.exports = __toCommonJS(dom_exports);
-var import_element = __toESM(require("./element.js"));
-var import_framework = require("./framework.js");
+var import_element = __toESM(require("./element"));
+var import_instant = require("./instant");
 function attachFunctionElement(element) {
   const getHTML = () => getDOMElement(element.name());
   let lastElements = getHTML();
@@ -74,7 +74,7 @@ function getChildElement(child) {
 function getDOMElement(element) {
   if (typeof element.name === "function")
     return attachFunctionElement(element);
-  if (element.name === import_framework.Fragment)
+  if (element.name === import_instant.Fragment)
     return getChildElement(element.children);
   const el = document.createElement(element.name);
   addChild(el, element.children);
