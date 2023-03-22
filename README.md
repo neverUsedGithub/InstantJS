@@ -1,2 +1,2 @@
 # InstantJS
-A very basic JS framework. See `examples/basic/` for an example.
+A very basic JS framework. Take a loot at the [example site](https://instantjs.justcoding123.repl.co/) or create your own by forking [this repl](https://replit.com/@JustCoding123/InstantJS).
