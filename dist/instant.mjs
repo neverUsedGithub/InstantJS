@@ -1,4 +1,5 @@
 import Element from "./element";
+import isEqual from "./isEqual";
 const Fragment = Symbol();
 let __FRAMEWORK_CURRENT = null;
 function createElement(name, properties, ...children) {
@@ -47,27 +48,23 @@ function state(defaultState) {
     else
       value = newValue;
     el.__hooks[hookId].value = value;
-    el.__triggerReload();
+    el.__triggerEvent("ui.reload");
   };
 }
-const arraysEqual = (a, b) => {
-  if (a.length !== b.length)
-    return false;
-  for (var i = 0; i < a.length; i++)
-    if (a[i] !== b[i])
-      return false;
-  return true;
-};
 function effect(callback, dependecies) {
   const el = __FRAMEWORK_CURRENT;
   let hookId = el.__hooks.length;
   const last = (el.__lastHooks || [])[hookId] || {};
   let destroy = last.destroy;
-  if (!last.deps || !arraysEqual(last.deps, dependecies)) {
-    if (destroy && typeof destroy === "function")
-      destroy();
-    destroy = callback();
+  function checkChange() {
+    if (!last.deps || !isEqual(last.deps, dependecies)) {
+      if (destroy && typeof destroy === "function")
+        destroy();
+      destroy = callback();
+    }
   }
+  checkChange();
+  el.__onEvent("reload.effect", checkChange);
   el.__hooks.push({
     type: "effect",
     destroy,
@@ -89,6 +86,7 @@ function ref(defaultState) {
     else
       value = newValue;
     el.__hooks[hookId].value = value;
+    el.__triggerEvent("reload.effect");
   };
 }
 export {

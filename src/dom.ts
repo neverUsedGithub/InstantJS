@@ -10,7 +10,7 @@ function attachFunctionElement(element: Element): (HTMLElement | Text)[] {
   const getHTML = () => getDOMElement((element.name as fn)());
   let lastElements = getHTML();
 
-  element.onReload(() => {
+  element.__onEvent("ui.reload", () => {
     const newel = getHTML();
 
     for (let i = 1; i < lastElements.length; i++) {

@@ -9,14 +9,18 @@ class Element {
     this.name = name;
     this.props = props;
     this.children = children;
-    this.#listeners = [];
+    this.#listeners = {};
   }
-  onReload(callback) {
-    this.#listeners.push(callback);
+  __onEvent(name, callback) {
+    if (!this.#listeners[name])
+      this.#listeners[name] = [callback];
+    else
+      this.#listeners[name].push(callback);
   }
-  __triggerReload() {
-    for (const listener of this.#listeners)
-      listener();
+  __triggerEvent(name) {
+    if (this.#listeners[name])
+      for (const listener of this.#listeners[name])
+        listener();
   }
 }
 export {

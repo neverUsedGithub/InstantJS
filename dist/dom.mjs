@@ -4,7 +4,7 @@ let namespaceStack = [];
 function attachFunctionElement(element) {
   const getHTML = () => getDOMElement(element.name());
   let lastElements = getHTML();
-  element.onReload(() => {
+  element.__onEvent("ui.reload", () => {
     const newel = getHTML();
     for (let i = 1; i < lastElements.length; i++) {
       lastElements[i].remove();

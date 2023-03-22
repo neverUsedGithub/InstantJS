@@ -1,4 +1,6 @@
 import Element from "./element";
+import isEqual from "./isEqual";
+
 export const Fragment = Symbol();
 interface fn { (...arg: any): any }
 
@@ -64,7 +66,7 @@ export function state<T>(defaultState: T): {(value?: T): T | void} {
   
   el.__hooks.push({ value: value, type: "state" });
 
-  return (newValue: StateModify<T>) => {
+  return (newValue: StateModify<T>): T | undefined => {
     if (newValue === undefined)
       return value
 
@@ -74,17 +76,8 @@ export function state<T>(defaultState: T): {(value?: T): T | void} {
       value = newValue;
 
     el.__hooks[hookId].value = value;
-    el.__triggerReload();
+    el.__triggerEvent("ui.reload");
   }
-}
-
-const arraysEqual = (a, b) => {
-  if (a.length !== b.length) return false;
-  for (var i = 0; i < a.length; i++)
-    if (a[i] !== b[i])
-      return false;
-
-  return true;
 }
 
 export function effect(callback: {(): fn}, dependecies: any[]) {
@@ -93,12 +86,17 @@ export function effect(callback: {(): fn}, dependecies: any[]) {
   const last = (el.__lastHooks || [])[hookId] || {};
   let destroy = last.destroy;
 
-  if (!last.deps || !arraysEqual(last.deps, dependecies)) {
-    if (destroy && typeof destroy === "function")
-      destroy();
-     
-    destroy = callback();
+  function checkChange() {
+    if (!last.deps || !isEqual(last.deps, dependecies)) {
+      if (destroy && typeof destroy === "function")
+        destroy();
+      
+      destroy = callback();
+    }
   }
+
+  checkChange();
+  el.__onEvent("reload.effect", checkChange);
   
   el.__hooks.push({
     type: "effect",
@@ -117,7 +115,7 @@ export function ref<T>(defaultState: T): {(value?: T): T | void} {
   
   el.__hooks.push({ value: value, type: "ref" });
 
-  return (newValue: StateModify<T>) => {
+  return (newValue: StateModify<T>): T | undefined => {
     if (newValue === undefined)
       return value
 
@@ -127,5 +125,6 @@ export function ref<T>(defaultState: T): {(value?: T): T | void} {
       value = newValue;
 
     el.__hooks[hookId].value = value;
+    el.__triggerEvent("reload.effect");
   }
 }

@@ -1,7 +1,7 @@
 interface fn { (...arg: any): any }
 
 export default class Element {
-  #listeners: fn[];
+  #listeners: Record<string, fn[]>;
   name: string | fn | Symbol;
   props: Record<string, any>;
   children: Element[];
@@ -12,16 +12,19 @@ export default class Element {
     this.name = name;
     this.props = props;
     this.children = children;
-    this.#listeners = [];
-
+    this.#listeners = {};
   }
 
-  onReload(callback: fn) {
-    this.#listeners.push(callback);
+  __onEvent(name: string, callback: fn) {
+    if (!this.#listeners[name])
+      this.#listeners[name] = [ callback ]
+    else
+      this.#listeners[name].push(callback);
   }
 
-  __triggerReload() {
-    for (const listener of this.#listeners)
-      listener();
+  __triggerEvent(name: string) {
+    if (this.#listeners[name])
+      for (const listener of this.#listeners[name])
+        listener();
   }
 }
