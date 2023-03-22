@@ -4,9 +4,9 @@ interface fn {
   (...arg: any): any;
 }
 
-function attachFunctionElement(element: Element): (HTMLElement | Text)[] {
-  // console.log("attachFunctionElement", element);
+let namespaceStack: string[] = [];
 
+function attachFunctionElement(element: Element): (HTMLElement | Text)[] {
   const getHTML = () => getDOMElement((element.name as fn)());
   let lastElements = getHTML();
 
@@ -38,8 +38,6 @@ function addChild(element: HTMLElement, children: Element[] | Element): void {
 function getChildElement(
   child: Element[] | Element | string | number | undefined | null
 ): (HTMLElement | Text)[] {
-  // console.log("getChildElement", el, child);
-
   if (child instanceof Element) return getDOMElement(child);
 
   if (typeof child === "string" || typeof child === "number")
@@ -58,13 +56,18 @@ function getChildElement(
 }
 
 function getDOMElement(element: Element): (HTMLElement | Text)[] {
-  // console.log("attachDOM", element);
+  if (typeof element.name === "function")
+    return attachFunctionElement(element);
 
-  if (typeof element.name === "function") return attachFunctionElement(element);
+  if (element.name === Fragment)
+    return getChildElement(element.children);
 
-  if (element.name === Fragment) return getChildElement(element.children);
+  if (element.name === "svg") namespaceStack.push("http://www.w3.org/2000/svg");
 
-  const el = document.createElement(element.name as string);
+  let el: HTMLElement;
+  if (namespaceStack.length > 0)
+    el = document.createElementNS(namespaceStack[namespaceStack.length - 1], element.name as string) as HTMLElement;
+  else el = document.createElement(element.name as string);
 
   addChild(el, element.children);
 
@@ -80,11 +83,11 @@ function getDOMElement(element: Element): (HTMLElement | Text)[] {
     } else el.setAttribute(name, value);
   }
 
+  if (element.name === "svg") namespaceStack.pop();
+
   return [el];
 }
 
 export function render(element: Element, eroot: HTMLElement) {
-  // console.log("RENDER", element);
-
   addChild(eroot, element);
 }

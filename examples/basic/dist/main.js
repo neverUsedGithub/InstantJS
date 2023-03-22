@@ -37,7 +37,7 @@ var Element = class {
 };
 _listeners = new WeakMap();
 
-// ../../src/framework.ts
+// ../../src/instant.ts
 var Fragment = Symbol();
 var __FRAMEWORK_CURRENT = null;
 function createElement(name, properties, ...children) {
@@ -91,6 +91,7 @@ function state(defaultState) {
 }
 
 // ../../src/dom.ts
+var namespaceStack = [];
 function attachFunctionElement(element) {
   const getHTML = () => getDOMElement(element.name());
   let lastElements = getHTML();
@@ -135,7 +136,13 @@ function getDOMElement(element) {
     return attachFunctionElement(element);
   if (element.name === Fragment)
     return getChildElement(element.children);
-  const el = document.createElement(element.name);
+  if (element.name === "svg")
+    namespaceStack.push("http://www.w3.org/2000/svg");
+  let el;
+  if (namespaceStack.length > 0)
+    el = document.createElementNS(namespaceStack[namespaceStack.length - 1], element.name);
+  else
+    el = document.createElement(element.name);
   addChild(el, element.children);
   for (const [name, value] of Object.entries(element.props)) {
     if (name === "ref")
@@ -149,6 +156,8 @@ function getDOMElement(element) {
     } else
       el.setAttribute(name, value);
   }
+  if (element.name === "svg")
+    namespaceStack.pop();
   return [el];
 }
 function render(element, eroot) {
@@ -158,7 +167,7 @@ function render(element, eroot) {
 // main.jsx
 function Counter({ initial }) {
   const count = state(initial);
-  return /* @__PURE__ */ createElement(Fragment, null, /* @__PURE__ */ createElement("h3", null, "Count is ", count()), /* @__PURE__ */ createElement("button", { onClick: () => count(count() - 1) }, "Decrease to ", count() - 1), /* @__PURE__ */ createElement("button", { onClick: () => count(count() + 1) }, "Increase to ", count() + 1));
+  return /* @__PURE__ */ createElement(Fragment, null, /* @__PURE__ */ createElement("h3", null, "Count is ", count()), /* @__PURE__ */ createElement("button", { onClick: () => count(count() - 1) }, "Decrease to ", count() - 1), /* @__PURE__ */ createElement("button", { onClick: () => count(count() + 1) }, "Increase to ", count() + 1), /* @__PURE__ */ createElement("svg", { fill: "#000000", height: "200px", width: "200px", version: "1.1", id: "Capa_1", xmlns: "http://www.w3.org/2000/svg", "xmlns:xlink": "http://www.w3.org/1999/xlink", viewBox: "0 0 310.285 310.285", "xml:space": "preserve" }, /* @__PURE__ */ createElement("g", { id: "SVGRepo_bgCarrier", "stroke-width": "0" }), /* @__PURE__ */ createElement("g", { id: "SVGRepo_tracerCarrier", "stroke-linecap": "round", "stroke-linejoin": "round" }), /* @__PURE__ */ createElement("g", { id: "SVGRepo_iconCarrier" }, " ", /* @__PURE__ */ createElement("path", { d: "M155.143,0.001C69.597,0.001,0,69.597,0,155.143c0,85.545,69.597,155.142,155.143,155.142s155.143-69.597,155.143-155.142 C310.285,69.597,240.689,0.001,155.143,0.001z M244.143,171.498c0,4.411-3.589,8-8,8h-163c-4.411,0-8-3.589-8-8v-32 c0-4.411,3.589-8,8-8h163c4.411,0,8,3.589,8,8V171.498z" }), " ")));
 }
 function App() {
   return /* @__PURE__ */ createElement(Fragment, null, /* @__PURE__ */ createElement(Counter, { initial: 0 }), /* @__PURE__ */ createElement(Counter, { initial: 5 }), /* @__PURE__ */ createElement(Counter, { initial: 10 }));

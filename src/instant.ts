@@ -52,6 +52,8 @@ New:  ${element.__hooks.map(x => x.type).join(", ")}`)
   }
 }
 
+type StateModify<T> = T | {(current: T): T} | undefined;
+
 export function state<T>(defaultState: T): {(value?: T): T | void} {
   const el = __FRAMEWORK_CURRENT as Element;
   let value = defaultState;
@@ -62,12 +64,12 @@ export function state<T>(defaultState: T): {(value?: T): T | void} {
   
   el.__hooks.push({ value: value, type: "state" });
 
-  return (newValue) => {
+  return (newValue: StateModify<T>) => {
     if (newValue === undefined)
       return value
 
     if (typeof newValue === "function")
-      value = newValue(value);
+      value = (newValue as fn)(value);
     else
       value = newValue;
 
@@ -115,12 +117,12 @@ export function ref<T>(defaultState: T): {(value?: T): T | void} {
   
   el.__hooks.push({ value: value, type: "ref" });
 
-  return (newValue) => {
+  return (newValue: StateModify<T>) => {
     if (newValue === undefined)
       return value
 
     if (typeof newValue === "function")
-      value = newValue(value);
+      value = (newValue as fn)(value);
     else
       value = newValue;
 

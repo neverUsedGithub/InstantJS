@@ -24,4 +24,4 @@ function App() {
   );
 }
 
-FrameworkDOM.render(<App />, document.querySelector("#app"));
+InstantDOM.render(<App />, document.querySelector("#app"));
