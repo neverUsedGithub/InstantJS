@@ -78,7 +78,7 @@ function getDOMElement(element: Element): (HTMLElement | Text)[] {
       const listenerName = name.substring(2);
 
       el.addEventListener(
-        listenerName[0].toLocaleLowerCase() + listenerName.substring(1),
+        listenerName.toLocaleLowerCase(),
         (e) => (value as fn)(e)
       );
     } else el.setAttribute(name, value);

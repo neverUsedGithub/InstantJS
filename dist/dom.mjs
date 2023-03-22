@@ -59,7 +59,7 @@ function getDOMElement(element) {
     else if (name.startsWith("on")) {
       const listenerName = name.substring(2);
       el.addEventListener(
-        listenerName[0].toLocaleLowerCase() + listenerName.substring(1),
+        listenerName.toLocaleLowerCase(),
         (e) => value(e)
       );
     } else
