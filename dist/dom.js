@@ -1,5 +1,37 @@
-import Element from "./element";
-import { Fragment } from "./instant";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var dom_exports = {};
+__export(dom_exports, {
+  render: () => render
+});
+module.exports = __toCommonJS(dom_exports);
+var import_element = __toESM(require("./element"));
+var import_instant = require("./instant");
 let namespaceStack = [];
 function attachFunctionElement(element) {
   const getHTML = () => getDOMElement(element.name());
@@ -25,7 +57,7 @@ function addChild(element, children) {
     element.appendChild(el);
 }
 function getChildElement(child) {
-  if (child instanceof Element)
+  if (child instanceof import_element.default)
     return getDOMElement(child);
   if (typeof child === "string" || typeof child === "number")
     return [document.createTextNode(child.toString())];
@@ -43,7 +75,7 @@ function getChildElement(child) {
 function getDOMElement(element) {
   if (typeof element.name === "function")
     return attachFunctionElement(element);
-  if (element.name === Fragment)
+  if (element.name === import_instant.Fragment)
     return getChildElement(element.children);
   if (element.name === "svg")
     namespaceStack.push("http://www.w3.org/2000/svg");
@@ -72,6 +104,7 @@ function getDOMElement(element) {
 function render(element, eroot) {
   addChild(eroot, element);
 }
-export {
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
   render
-};
+});
