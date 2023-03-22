@@ -10,8 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "exports": {
-    ".": "./dist/instant.js",
-    "./dom": "./dist/dom.js"
+    ".": "./dist/instant.mjs",
+    "./dom": "./dist/dom.mjs"
   },
   "keywords": [],
   "author": "",
