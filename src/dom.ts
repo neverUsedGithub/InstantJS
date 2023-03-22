@@ -65,10 +65,8 @@ function getDOMElement(element: Element): (HTMLElement | Text)[] {
   if (element.name === "svg") namespaceStack.push("http://www.w3.org/2000/svg");
 
   let el: HTMLElement;
-  if (namespaceStack.length > 0) {
+  if (namespaceStack.length > 0)
     el = document.createElementNS(namespaceStack[namespaceStack.length - 1], element.name as string) as HTMLElement;
-    console.log("CREATE WITH", namespaceStack, element.name);
-  }
   else
     el = document.createElement(element.name as string);
 
